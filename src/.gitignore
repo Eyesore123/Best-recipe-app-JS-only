@@ -1,0 +1,22 @@
+# Dependency directories
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Optional npm cache directory
+.npm
+
+# .Env-files
+
+*.env
+
+# .Env-folder
+
+.env/
+
+# Vendor folder
+
+vendor/

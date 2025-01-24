@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jonin reseptisovellus</title>
+    <link rel="stylesheet" href="landingp.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <script type="module" src="index.js"></script>
+
+    <script type="module">
+        import  { signInWithGoogle } from './index.js';
+        import { emailSignUp } from './auth.js';
+    </script>
+    
+</head>
+<body>
+
+    <script>
+        // Fix this:
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('loggedOut')) {const signOutDiv = document.getElementById('signoutdiv');
+                signOutDiv.classList.add('show');
+            }
+        }
+
+    </script>
+
+    <div id="signoutdiv">Olet nyt kirjautunut ulos
+
+    </div>
+        <div class="parentcontainer">
+            <div class="whitecontainer" id="h1container">
+
+                <div class="h1">
+                    <h1>Best recipes</h1>
+                </div>
+                    
+                <div id="auth-options" style="text-align: center; padding-top: 80px;;">
+                        <button class="button" id="googleSignIn">Sign in with Google</button><br>
+                        <button class="button" id="emailSignIn">Sign in with email</button>
+                </div>
+
+            </div>
+            <div class="whitecontainer" id="whitecontainer" style="display: none;">
+                <div id="emailSignUpContainer" style="display: none;">
+                    <h3>Sign in with email</h3>
+                        <!-- Assuming a form where the user selects whether they want to sign up or log in -->
+                            <form id="emailSignUpForm">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required><br>
+                                
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" required><br>
+
+                                <!-- Radio buttons for sign-up or login -->
+
+                                <label>
+                                    <input type="radio" id="loginRadio" name="authAction" checked> Log In
+                                </label><br>
+                                <p style="justify-content: center;">Or if you don't have an account, sign up please:</p>
+                                <label>
+                                    <input type="radio" id="signUpRadio" name="authAction"> Sign Up
+                                </label>
+                                
+
+                                <button type="submit" id="emailSignUpButton">Submit</button>
+                            </form>
+
+                </div>
+            </div>
+        </div>
+</body>
+</html>

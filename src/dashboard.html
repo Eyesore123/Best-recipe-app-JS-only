@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <!-- dashboard.html -->
+        <script type="module">
+            import { logOut } from './auth.js';
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const logOutBtn = document.getElementById('logout-btn');
+                if (logOutBtn) {
+                    logOutBtn.addEventListener('click', logOut);
+                }
+
+                const deleteButton = document.getElementById('deleteRecipeButton');
+                if (deleteButton) {
+                    deleteButton.addEventListener('click', () => {
+                        console.log('Delete button clicked');
+                    });
+                }
+            });
+        
+        </script>
+
+</head>
+<body id="body">
+    <div class="logout-btn">
+        <button id="logout-btn" style="padding: 8px; border-radius: 5px;" onclick="logOut()">Sign out</button>
+    </div>
+
+    <div class="container" id="dashboard-container">
+        <div class="left-panel">
+
+            <div class="contents">
+
+                <h2 style="text-align: center;">RECIPES</h2>
+                <p style="text-align: center; margin-top: 4vh;" id="desc">Currently showing private recipes</p>
+                <div id="recipelist" class="recipe-list">Welcome! Currently there are no added recipes in your personal recipe collection. Add some or check what others have added!
+                </div>
+
+            </div>
+        </div>
+
+        <div class="right-panel">
+                <div id="addRecipeFormContainer">
+                    <form id="addRecipeForm">
+                        <label for="recipeName">Recipe Name:</label>
+                        <input type="text" style="margin-top: 55px; font-size: 11px;" id="recipeName" placeholder="" required><br>Choose an image (optional):
+                        <input type="file" id="recipeImage" name="recipeImage"><br>
+                        <label for="publicCheckbox">Public Recipe</label>
+                        <input type="checkbox" id="publicCheckbox" name="public">
+                        <button type="submit" method="POST">Submit Recipe</button>
+                        <label for="ingredients"></label>
+                        <textarea id="ingredients" class="ingredients" style="height: 100px; width: 80%; margin-top: 4vh;" placeholder="Ingredients" required></textarea>
+                        <label for="instructions"></label>
+                        <textarea class="instructions" id="instructions" style="height: 400px; width: 80%; margin-top: 10px;" placeholder="Instructions" required></textarea>
+                        <div class="clearfieldsbuttoncontainer" style="margin-top: 30px;">
+                            <button class="clearfields" id="clearfields">Clear Fields</button>
+                        </div>
+                    </form>
+                    <div class="optionBtnContainer" id="optionBtnContainer">
+                        <button id="extraOptionsButton" class="extraOptionsButton">Extra Options</button>
+                    </div>
+                        
+                    <div id="extraOptionsContainer" class="extraOptionsContainer">
+                        <div id="parent123">
+                            
+                                                       
+                            <div id="updateRecipeForm" style="display:block">
+                                <h2 style="margin-bottom: 3vh;">Update Recipe</h2>
+                                <form class="updateRecipeForm">
+                                    <label for="updateRecipeName">Recipe Name:</label>
+                                    <input type="text" id="updateRecipeName" name="recipeName">
+                                    <br><br>
+                                    <label for="updateIngredients">Ingredients:</label>
+                                    <textarea id="updateIngredients" name="ingredients"></textarea>
+                                    
+                                    <label for="updateInstructions">Instructions:</label>
+                                    <textarea id="updateInstructions" name="instructions"></textarea>
+                                    
+                                    <label for="updatePublicCheckbox">Public:</label>
+                                    <input type="checkbox" id="updatePublicCheckbox" name="public"><br><br><br>
+                                    
+                                    <label for="updateRecipeImage">Recipe Image:<br><br></label>
+                                    <input type="file" id="updateRecipeImage" name="recipeImage" style="display:inline-block; justify-content: center;"><br><br><br>
+
+                                    <button type="button" id="clearfields2" style="padding: 10px 20px; margin-bottom: 1vh; margin-top: 1vh; background-color: #28a745; color: white; border-radius: 5px; border: none">Clear Fields</button><br><br>
+
+                                    <button type="button" class="updaterecipebutton" id="updaterecipebutton">Update Recipe</button>
+
+                                </form>
+                            </div>
+
+                            
+                            <button id="toggle-recipes-btn" class="toggle-recipes-btn">Show Public Recipes</button>
+                            <button id="show-all-recipes-btn" class="show-all-recipes-btn">Show All Recipes</button>
+                            <button id="hide-options-btn" class="hide-options-btn">Hide Extra Options</button>
+                        </div>
+                    </div>
+    
+                    <div class="berrycontainer" id="berrycontainer">
+                        <div class="thirdcontainer">
+                            <div class="berry">
+                                <img src="berry1.png" id="berry1" alt="Moving Image">
+                            </div>
+                        </div>
+                        <div class="thirdcontainer">
+                            <div class="berry">
+                                <img src="berry1.png" id ="berry2" alt="Moving Image">
+                            </div>
+                        </div>
+                        <div class="thirdcontainer">
+                            <div class="berry">
+                                <img src="berry1.png" id ="berry3" alt="Moving Image">
+                            </div>
+                        </div>
+                    </div>    
+                </div>
+        </div>
+    </div>
+    <div class="instructional">
+        <h2 id="instructionsp">Instructions</h2>
+        <div id="appInstructions" class="appInstructions">
+            <p>Add recipes to your recipe book (on the left panel), and share them with others if you want. 
+                Start by submitting a recipe. Check "Public Recipe" if you want to make it available to others. Recipes are private by default.
+                Click on the recipe on the left panel to make it active and feed the info into the middle panel when you want to see recipe details. "Delete" lets you remove
+              a recipe from your collection. "Zoom image" lets you zoom in the image for native resolution. Click on the extra options button to see more options. You can toggle between private and public recipes or show both at the same time. You see only private recipes by default. If you want to update a recipe, click on the "update recipe" button in the recipe card and then fill out the form on the extra options panel. When you click the "update recipe" button, it sends the details to both forms so you can compare the changes. Only the form in the extra options panel will send the updated recipe. Recipe dates use Finnish date format (DD-MM-YYYY). A user can only update or delete their own recipes. You can update the publicity status of your recipe at any time by checking or unchecking the checkbox.</p>
+        </div>
+    </div>
+<script type="module" src="index.js"></script>
+<script type="module" src="auth.js"></script>
+</body>
+</html>
