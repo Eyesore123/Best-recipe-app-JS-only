@@ -20,3 +20,8 @@ npm-debug.log*
 # Vendor folder
 
 vendor/
+
+# Firebase 
+
+.firebase/
+firebase-debug.log
