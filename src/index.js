@@ -69,7 +69,7 @@ export function signInWithGoogle() {
         const user = result.user; // Google User Object
         console.log(user, "is logged in");
         // Signed in:
-        window.location.href = '/src/dashboard.html';
+        window.location.href = '/dashboard.html';
     })
     .catch((error) => {
         console.log("Error signing in with Google:", error);

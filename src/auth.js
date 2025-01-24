@@ -4,7 +4,12 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.15.0/firebas
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  
+  apiKey: "AIzaSyCb7jiH7x7SWhKoGb_S1YRC9tm1bt9jINI",
+  authDomain: "fir-exercise-31abd.firebaseapp.com",
+  projectId: "fir-exercise-31abd",
+  storageBucket: "fir-exercise-31abd.firebasestorage.app",
+  messagingSenderId: "162981277106",
+  appId: "1:162981277106:web:c50158af7056a5899388ab"
 };
 
 // Initialize Firebase
@@ -20,7 +25,7 @@ export function logOut() {
     auth.signOut()
         .then(() => {
             console.log('User signed out');
-            window.location.href = './index.html';
+            window.location.href = '/index.html';
         })
         .catch((error) => {
             console.error('Sign out error: ', error);
@@ -63,7 +68,7 @@ export function emailSignUp() {
 
                     // Remove the event listener from the sign-up button
 
-                    window.location.href = 'src/dashboard.html'; // Redirect to dashboard after successful sign-up
+                    window.location.href = 'dashboard.html'; // Redirect to dashboard after successful sign-up
                 })
                 .catch((error) => {
                     if (error.code === 'auth/email-already-in-use') {
@@ -79,7 +84,7 @@ export function emailSignUp() {
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     console.log("User logged in:", userCredential.user);
-                    window.location.href = '/src/dashboard.html'; // Redirect to dashboard after successful login
+                    window.location.href = '/dashboard.html'; // Redirect to dashboard after successful login
                 })
                 .catch((error) => {
                     console.error("Error logging in:", error);
