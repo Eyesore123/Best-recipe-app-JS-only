@@ -6,4 +6,6 @@ Add images and write down instructions. Users can toggle between public and priv
 
 ![recipe_app](https://github.com/user-attachments/assets/f6ebab43-c52e-4ac4-a37c-e29e19e3a48e)
 
-This project was my first bigger app project that I made from scratch, without instructions and I wrote it with JavaScript only. I used Firebase for backend. I was a fool and put all the JS in two separate files. One file contains over 500 lines of code. At the start of the project I had no clear idea about the proper file structure. I wasn't sure about how all the imports and exports worked so I did what I could. The app itself doesn't look that good, but I'm proud that I was able to put all the pieces together, and it works like a dream.
+![recipe_app2](https://github.com/user-attachments/assets/d82ddaef-50de-4e86-9fe5-eebe6731d7da)
+
+This project was my first bigger app project that I made, without instructions and I wrote it with JavaScript only. I used Firebase for backend. I was a fool and put all the JS in two separate files. One file contains over 500 lines of code. At the start of the project I had no clear idea about the proper file structure. I wasn't sure about how all the imports and exports worked so I did what I could. The app itself doesn't look that good, but I'm proud that I was able to put all the pieces together, and it works like a dream.
