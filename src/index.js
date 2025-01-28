@@ -11,6 +11,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged
  import { firebaseConfig } from "./auth.js";
 
 
+
 // Importing the necessary functions
 import { toggleEmailSignUp, emailSignUp, logOut } from './auth.js';
 
@@ -76,6 +77,15 @@ export function signInWithGoogle() {
     });
 };
 
+// Functions to fire loading overlay
+
+function showLoadingOverlay() {
+    document.getElementById('loadingOverlay').style.display = 'block';
+}
+
+function hideLoadingOverlay() {
+    document.getElementById('loadingOverlay').style.display = 'none';
+}
 
 // Logic to load recipes
 export function loadRecipes() {
@@ -295,7 +305,7 @@ async function updateRecipe(e) {
     const updatedIngredients = document.getElementById('updateIngredients').value;
     const updatedInstructions = document.getElementById('updateInstructions').value;
     const publicityCheckbox = document.getElementById('updatePublicCheckbox');
-    const imageUrl = document.getElementById('updateRecipeImage').files[0]; // Image file
+    const imageFile = document.getElementById('updateRecipeImage').files[0]; // Image file
 
     console.log('Updated Title:', updatedTitle);
     console.log('Updated Ingredients:', updatedIngredients);
@@ -310,18 +320,17 @@ async function updateRecipe(e) {
     };
 
     if (confirm("Are you sure you want to update this recipe? (recipe.id: " + recipeId + ")")) {
+        showLoadingOverlay();
         try {
-            if (imageUrl) {
-                const uploadedImageUrl = await uploadRecipeImage(imageUrl); // Handle image upload
+            if (imageFile) {
+                const uploadedImageUrl = await uploadRecipeImage(imageFile); // Handle image upload
                 if (uploadedImageUrl) {
-                    updatedData.image = uploadedImageUrl; // Only update image URL if a new image was uploaded
+                    updatedData.imageUrl = uploadedImageUrl; // Only update image URL if a new image was uploaded
                 }
             }
 
             console.log('Updated data being sent:', updatedData);
             await updateDoc(doc(db, "Reseptit", recipeId), updatedData);
-
-            showAlert("Recipe updated successfully!");
 
             // Optionally, refresh the recipe list here
             showRecipeList(recipes, showingPublicRecipes, false);
@@ -332,10 +341,13 @@ async function updateRecipe(e) {
             document.getElementById('updateInstructions').value = '';
             document.getElementById('updatePublicCheckbox').checked = false;
             document.getElementById('updateRecipeImage').value = '';
+            showAlert("Recipe updated successfully!");
         
         } catch (error) {
             console.error("Error updating recipe: ", error);
             alert("There was an error updating the recipe.");
+        } finally {
+            hideLoadingOverlay();
         }
     } else {
         console.log("Update canceled by user.");
@@ -393,12 +405,14 @@ function uploadRecipeImage() {
         if (fileInput && fileInput.files.length > 0) {
             const file = fileInput.files[0];
             console.log("Selected file:", file);
-            const maxFileSize = 2 * 1024 * 1024; // 2MB in bytes
+            const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+            showLoadingOverlay();
 
             if (file.size > maxFileSize) {
                 showAlert("Image size exceeds the maximum allowed size of 5MB.");
                 fileInput.value = ''; // Clear the file input
                 resolve(null); // Resolve with no image
+                hideLoadingOverlay();
             } else {
                 const storageRef = ref(storage, 'Reseptit/' + file.name);
 
@@ -407,13 +421,16 @@ function uploadRecipeImage() {
                     getDownloadURL(storageRef).then((imageUrl) => {
                         console.log("Image URL:", imageUrl);
                         resolve(imageUrl); // Resolve with the image URL
+                        hideLoadingOverlay();
                     }).catch((error) => {
                         console.error("Error getting download URL:", error);
                         reject(error); // Reject with error
+                        hideLoadingOverlay();
                     });
                 }).catch((error) => {
                     console.error("Error uploading image:", error);
                     reject(error); // Reject with error
+                    hideLoadingOverlay();
                 });
             }
         } else {
@@ -425,6 +442,8 @@ function uploadRecipeImage() {
 }
 
 async function addRecipeWithImage(imageUrl) {
+    showLoadingOverlay();
+
     const recipeName = document.getElementById('recipeName').value;
     const ingredients = document.getElementById('ingredients').value;
     const instructions = document.getElementById('instructions').value;
@@ -444,18 +463,24 @@ async function addRecipeWithImage(imageUrl) {
     try {
         await addDoc(collection(db, "Reseptit"), recipeData);
         console.log('Recipe added');
+        showAlert('Recipe added successfully!');
     } catch (error) {
         console.error("Error adding recipe:", error);
         throw error;
+    } finally {
+        hideLoadingOverlay();
     }
 }
+
+
+
+// This is the actual part where the form is submitted
 
 document.getElementById('addRecipeForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     try {
         const imageUrl = await uploadRecipeImage(); // Wait for the image to be uploaded
-        await addRecipeWithImage(imageUrl); // Wait for the recipe to be added
-        showAlert('Recipe submitted successfully!');
+        await addRecipeWithImage(imageUrl);
         document.getElementById('addRecipeForm').reset();
     } catch (error) {
         console.error("Error during submission:", error);
