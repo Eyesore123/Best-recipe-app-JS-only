@@ -21,6 +21,7 @@ You can test the website via link. Note that if you want to use it in your worki
 * Rate limiters
 * Better styles and fixes to horrible UI
 * Recipe search filter
+* Download recipes to pdf
 * Navbar for navigation
 * Comments field
 * Abort controllers
