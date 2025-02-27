@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"
 
 import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc,
-     query, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+     query, updateDoc, where, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
 import { getAuth 
  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
@@ -10,11 +10,46 @@ import { getAuth
 
  import { firebaseConfig } from "./auth.js";
  import { logOut } from './auth.js';
+ import { serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+ if (window.location.pathname.endsWith('dashboard.html') || window.location.pathname.endsWith('src/dashboard.html')) {
 
  const app = initializeApp(firebaseConfig);
  const db = getFirestore();
  const auth = getAuth(app);
  const storage = getStorage();
+
+ // // Rate limiter
+
+const today = new Date();
+const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+// Ensure the user is authenticated
+
+async function checkRateLimit() {
+    if (auth.currentUser) {
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+
+        const userRecipesRef = collection(db, 'Reseptit');
+        const q = query(
+            userRecipesRef,
+            where('author', '==', auth.currentUser.email),
+            where('timestamp', '>=', Timestamp.fromDate(startOfToday))
+        );
+
+        const querySnapshot = await getDocs(q);
+        const recipeCount = querySnapshot.size;
+
+        if (recipeCount >= 6) {
+            showAlert('Rate limit exceeded. Maximum 5 recipes per day.');
+            return false;
+        }
+        return true;
+    }
+    return false;
+}
+
 
 // Logic to load recipes
 function loadRecipes() {
@@ -216,6 +251,10 @@ function deleteRecipeById(recipeId) {
 
 // Function to update the recipe, allow only the user who made the recipe to update it
 async function updateRecipe(e) {
+
+    const canProceed = await checkRateLimit();
+    if (!canProceed) return;
+
     const recipeId = e.target.dataset.recipeId;
     if (!recipeId) {
         console.error('Recipe ID is undefined or not set');
@@ -242,6 +281,7 @@ async function updateRecipe(e) {
 
     const updatedData = {
         name: updatedTitle,
+        timestamp: serverTimestamp(),
         ingredients: updatedIngredients,
         instructions: updatedInstructions,
         date: "Modified on " + new Date().toLocaleDateString('fi-FI'),
@@ -372,6 +412,7 @@ async function addRecipeWithImage(imageUrl) {
 
     const recipeData = {
         name: recipeName,
+        timestamp: serverTimestamp(),
         imageUrl: imageUrl || 'default.jpeg',
         ingredients: ingredients,
         instructions: instructions,
@@ -389,11 +430,15 @@ async function addRecipeWithImage(imageUrl) {
     }
 }
 
+// Adding with rate limit check
 document.getElementById('addRecipeForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const canProceed = await checkRateLimit();
+    if (!canProceed) return;
+
     try {
-        const imageUrl = await uploadRecipeImage(); // Wait for the image to be uploaded
-        await addRecipeWithImage(imageUrl); // Wait for the recipe to be added
+        const imageUrl = await uploadRecipeImage();
+        await addRecipeWithImage(imageUrl);
         showAlert('Recipe submitted successfully!');
         document.getElementById('addRecipeForm').reset();
     } catch (error) {
@@ -505,3 +550,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+ }

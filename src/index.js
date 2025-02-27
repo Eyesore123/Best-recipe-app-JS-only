@@ -5,7 +5,10 @@ import { signInWithPopup, onAuthStateChanged
 import { toggleEmailSignUp, emailSignUp } from './auth.js';
 ;
 
-import { auth, provider } from './auth.js';
+import { auth, provider, db } from './auth.js';
+
+import { collection, query, where } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
+import { showAlert } from './dashboard.js';
 
 // Call these functions when the DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -19,35 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
        logOutBtn.addEventListener('click', logOut);
    }
 });
-
-
-// // Rate limiter
-
-// const today = new Date();
-// const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
-// const userRecipesRef = collection(db, 'reseptit');
-
-// // Ensure the user is authenticated
-// if (auth.currentUser) {
-//     const querySnapshot = await query(
-//         userRecipesRef,
-//         where('author', '==', auth.currentUser.uid),  // Filter recipes by the current user
-//         where('timestamp', '>=', firebase.firestore.Timestamp.fromDate(startOfToday))  // Only count today's entries
-//     ).get();
-
-//     const updateCount = querySnapshot.size;
-
-//     if (updateCount >= 5) {
-//         showAlert('Rate limit exceeded. Please try again later.');
-//         return;
-//     }
-
-//     // Proceed with the recipe upload or modification
-// } else {
-//     console.log("User not authenticated");
-//     return;
-// }
 
 
 // Check if the user is already logged in

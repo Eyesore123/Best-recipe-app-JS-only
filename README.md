@@ -19,8 +19,6 @@ You can test the website via link. Note that if you want to use it in your worki
 
 ## Improvement ideas
 
-
-* Rate limiters (coming soon!)
 * Better styles and fixes to horrible UI
 * Recipe search filter
 * Download recipes to pdf
@@ -28,10 +26,6 @@ You can test the website via link. Note that if you want to use it in your worki
 * Comments field
 * Abort controllers
 * Mobile support
-
-## Issues
-
-* Event listeners and scripts cause a big load of warnings in the console because they are not properly configured to listen either the sign-in window or the recipe window so they listen all the time even when the DOM content is not loaded. 
 
 ## What I learned
 
