@@ -1,23 +1,11 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"
-
-import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc,
-     query, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged
- } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-
- import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-storage.js";
-
- import { firebaseConfig } from "./auth.js";
-
-
+import { signInWithPopup, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
 // Importing the necessary functions
 import { toggleEmailSignUp, emailSignUp } from './auth.js';
 ;
 
-import { provider, auth } from './auth.js';
-// Initialize Firebase
+import { auth, provider } from './auth.js';
 
 // Call these functions when the DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {

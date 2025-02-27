@@ -19,8 +19,8 @@ You can test the website via link. Note that if you want to use it in your worki
 
 ## Improvement ideas
 
-* Fixes to code so it is more modular: JavaScript runs only when the right DOM-content is loaded. Scripts run only when the hooked-up elements exist in the DOM.
-* Rate limiters
+
+* Rate limiters (coming soon!)
 * Better styles and fixes to horrible UI
 * Recipe search filter
 * Download recipes to pdf
@@ -35,4 +35,6 @@ You can test the website via link. Note that if you want to use it in your worki
 
 ## What I learned
 
-This project was my first bigger JavaScript project that I made, without instructions. Firebase v. 11 was used for backend. I was a fool and put all the JS in two separate files. At the start of the project I wasn't sure about the proper file structure. I didn't know how all the imports and exports worked with ES6 modules so I did what I could. The app itself doesn't look that good, but it works quite well.
+This project was my first bigger JavaScript project that I made, without instructions. Firebase v. 11 was used for backend. I was a fool and put all the JS in two separate files at the start of the project. I wasn't sure about the proper file structure. I didn't know how all the imports and exports worked with ES6 modules so I did what I could. I restructured the JS files because they were causing error messages on console. Errors were caused by the fact that event listeners were listening when the DOM content was not loaded so I reorganized the files. Restructuring can be a huge pain but getting rid of the errors is more important to me.
+
+The app itself doesn't look that good, but it works quite well.
