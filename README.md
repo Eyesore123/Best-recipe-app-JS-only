@@ -1,4 +1,4 @@
-NOTE! I am currently restructing the files in order to get rid of the error messages so the app might not work correctly at all times. Thank you for your patience!
+NOTE! I am currently restructuring the files in order to get rid of the error messages so the app might not work correctly at all times. Thank you for your patience!
 
 ## Features
 
@@ -9,7 +9,7 @@ Add images and write down instructions. Browse your own recipes or publicly avai
 
 You can toggle between public and private recipes and change the publicity status at any time. You can hide the extra options panel. When you do, a CSS animation starts where strawberry icons move around on top of the background image.
 
-You can test the website via link. Note that if you want to use it in your working directory and test all the functionalities, you need to set up the correct Firebase configuration with database and storage and use your own keys for backend.
+You can test the website via link. Note that if you want to use it in your working directory and test all the functionalities, you need to set up the correct Firebase configuration with database and storage and use your own keys for backend. You also might have to fix the file paths, because I have different file paths in my local environment for deployment.
 
 ![recipe_app](https://github.com/user-attachments/assets/f6ebab43-c52e-4ac4-a37c-e29e19e3a48e)
 

@@ -5,13 +5,8 @@ import { getFirestore } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase
 import { getStorage } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-storage.js';
 
 // Your web app's Firebase configuration
-<<<<<<< HEAD
 const firebaseConfig = {
  
-=======
-export const firebaseConfig = {
-
->>>>>>> 1f6a489 (massive restructuring of the files -> getting rid of error messages!)
 };
 
 // Initialize Firebase
@@ -25,7 +20,6 @@ const provider = new GoogleAuthProvider();
 
 // Function to toggle between email sign-in and sign-up forms
 export function toggleEmailSignUp() {
-<<<<<<< HEAD
     
     document.getElementById('emailSignIn').addEventListener('click', () => {
         document.getElementById('emailSignUpContainer').style.display = 'block';
@@ -88,16 +82,6 @@ export function emailSignUp() {
         // Reset the form
         form.reset();
          });
-=======
-    const emailSignInBtn = document.getElementById('emailSignIn');
-    if (emailSignInBtn) {
-        emailSignInBtn.addEventListener('click', () => {
-            document.getElementById('emailSignUpContainer').style.display = 'block';
-            document.getElementById('whitecontainer').style.display = 'block';
-            document.getElementById('auth-options').style.display = 'none';
-            document.getElementById('h1container').style.display = 'none';
-        });
->>>>>>> 1f6a489 (massive restructuring of the files -> getting rid of error messages!)
     }
 }
 
