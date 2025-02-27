@@ -5,30 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" href="dashboard.css">
-    <!-- dashboard.html -->
-        <script type="module">
-            import { logOut } from './auth.js';
+    <script type="module">
+        import { logOut } from './auth.js';
+        // Get the logout button element
+        const logoutButton = document.getElementById('logout-btn');
 
-            document.addEventListener('DOMContentLoaded', () => {
-                const logOutBtn = document.getElementById('logout-btn');
-                if (logOutBtn) {
-                    logOutBtn.addEventListener('click', logOut);
-                }
-
-                const deleteButton = document.getElementById('deleteRecipeButton');
-                if (deleteButton) {
-                    deleteButton.addEventListener('click', () => {
-                        console.log('Delete button clicked');
-                    });
-                }
-            });
-        
-        </script>
-
+        // Add an event listener to the logout button
+        logoutButton.addEventListener('click', logOut);
+    </script>
 </head>
+
 <body id="body">
     <div class="logout-btn">
-        <button id="logout-btn" style="padding: 8px; border-radius: 5px;" onclick="logOut()">Sign out</button>
+        <button id="logout-btn" style="padding: 8px; border-radius: 5px;">Sign out</button>
     </div>
 
     <div class="container" id="dashboard-container">

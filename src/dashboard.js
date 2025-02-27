@@ -3,118 +3,21 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebas
 import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc,
      query, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged
+import { getAuth 
  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-storage.js";
 
  import { firebaseConfig } from "./auth.js";
+ import { logOut } from './auth.js';
 
-
-
-// Importing the necessary functions
-import { toggleEmailSignUp, emailSignUp } from './auth.js';
-;
-
-import { provider, auth } from './auth.js';
-// Initialize Firebase
-
-// Call these functions when the DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-   toggleEmailSignUp(); // Handle the email sign-in button click
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-   const logOutBtn = document.getElementById('logOutBtn');
-
-   if (logOutBtn) {
-       logOutBtn.addEventListener('click', logOut);
-   }
-});
-
-
-// // Rate limiter
-
-// const today = new Date();
-// const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
-// const userRecipesRef = collection(db, 'reseptit');
-
-// // Ensure the user is authenticated
-// if (auth.currentUser) {
-//     const querySnapshot = await query(
-//         userRecipesRef,
-//         where('author', '==', auth.currentUser.uid),  // Filter recipes by the current user
-//         where('timestamp', '>=', firebase.firestore.Timestamp.fromDate(startOfToday))  // Only count today's entries
-//     ).get();
-
-//     const updateCount = querySnapshot.size;
-
-//     if (updateCount >= 5) {
-//         showAlert('Rate limit exceeded. Please try again later.');
-//         return;
-//     }
-
-//     // Proceed with the recipe upload or modification
-// } else {
-//     console.log("User not authenticated");
-//     return;
-// }
-
-
-// Check if the user is already logged in
-document.addEventListener('DOMContentLoaded', function () {
-   if (localStorage.getItem('redirected') === 'true') {
-       return; // If already redirected, do nothing
-   }
-
-   onAuthStateChanged(auth, (user) => {
-       if (user) {
-           console.log("User is already logged in");
-           if (window.location.pathname !== '/src/dashboard.html') {
-               localStorage.setItem('redirected', 'true'); // Prevent future redirects
-               window.location.href = '/src/dashboard.html';
-           }
-       } else {
-           console.log("No user signed in.");
-           emailSignUp();
-       }
-   });
-});
-
-// Sign in with Google
-
-const googleSignInButton = document.getElementById('googleSignIn');
-if (googleSignInButton) {
-   googleSignInButton.addEventListener('click', signInWithGoogle);
-}
-
-export function signInWithGoogle() {
-    signInWithPopup(auth, provider)
-    .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const user = result.user; // Google User Object
-        console.log(user, "is logged in");
-        // Signed in:
-        window.location.href = '/dashboard.html';
-    })
-    .catch((error) => {
-        console.log("Error signing in with Google:", error);
-    });
-};
-
-// Functions to fire loading overlay
-
-function showLoadingOverlay() {
-    document.getElementById('loadingOverlay').style.display = 'block';
-}
-
-function hideLoadingOverlay() {
-    document.getElementById('loadingOverlay').style.display = 'none';
-}
+ const app = initializeApp(firebaseConfig);
+ const db = getFirestore();
+ const auth = getAuth(app);
+ const storage = getStorage();
 
 // Logic to load recipes
-export function loadRecipes() {
+function loadRecipes() {
     const collectionRef = collection(db, "Reseptit");
     const q = query(collectionRef);
     onSnapshot(q, (querySnapshot) => {
@@ -331,7 +234,7 @@ async function updateRecipe(e) {
     const updatedIngredients = document.getElementById('updateIngredients').value;
     const updatedInstructions = document.getElementById('updateInstructions').value;
     const publicityCheckbox = document.getElementById('updatePublicCheckbox');
-    const imageFile = document.getElementById('updateRecipeImage').files[0]; // Image file
+    const imageUrl = document.getElementById('updateRecipeImage').files[0]; // Image file
 
     console.log('Updated Title:', updatedTitle);
     console.log('Updated Ingredients:', updatedIngredients);
@@ -346,17 +249,18 @@ async function updateRecipe(e) {
     };
 
     if (confirm("Are you sure you want to update this recipe? (recipe.id: " + recipeId + ")")) {
-        showLoadingOverlay();
         try {
-            if (imageFile) {
-                const uploadedImageUrl = await uploadRecipeImage(imageFile); // Handle image upload
+            if (imageUrl) {
+                const uploadedImageUrl = await uploadRecipeImage(imageUrl); // Handle image upload
                 if (uploadedImageUrl) {
-                    updatedData.imageUrl = uploadedImageUrl; // Only update image URL if a new image was uploaded
+                    updatedData.image = uploadedImageUrl; // Only update image URL if a new image was uploaded
                 }
             }
 
             console.log('Updated data being sent:', updatedData);
             await updateDoc(doc(db, "Reseptit", recipeId), updatedData);
+
+            showAlert("Recipe updated successfully!");
 
             // Optionally, refresh the recipe list here
             showRecipeList(recipes, showingPublicRecipes, false);
@@ -367,13 +271,10 @@ async function updateRecipe(e) {
             document.getElementById('updateInstructions').value = '';
             document.getElementById('updatePublicCheckbox').checked = false;
             document.getElementById('updateRecipeImage').value = '';
-            showAlert("Recipe updated successfully!");
         
         } catch (error) {
             console.error("Error updating recipe: ", error);
             alert("There was an error updating the recipe.");
-        } finally {
-            hideLoadingOverlay();
         }
     } else {
         console.log("Update canceled by user.");
@@ -431,14 +332,12 @@ function uploadRecipeImage() {
         if (fileInput && fileInput.files.length > 0) {
             const file = fileInput.files[0];
             console.log("Selected file:", file);
-            const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
-            showLoadingOverlay();
+            const maxFileSize = 2 * 1024 * 1024; // 2MB in bytes
 
             if (file.size > maxFileSize) {
                 showAlert("Image size exceeds the maximum allowed size of 5MB.");
                 fileInput.value = ''; // Clear the file input
                 resolve(null); // Resolve with no image
-                hideLoadingOverlay();
             } else {
                 const storageRef = ref(storage, 'Reseptit/' + file.name);
 
@@ -447,16 +346,13 @@ function uploadRecipeImage() {
                     getDownloadURL(storageRef).then((imageUrl) => {
                         console.log("Image URL:", imageUrl);
                         resolve(imageUrl); // Resolve with the image URL
-                        hideLoadingOverlay();
                     }).catch((error) => {
                         console.error("Error getting download URL:", error);
                         reject(error); // Reject with error
-                        hideLoadingOverlay();
                     });
                 }).catch((error) => {
                     console.error("Error uploading image:", error);
                     reject(error); // Reject with error
-                    hideLoadingOverlay();
                 });
             }
         } else {
@@ -468,8 +364,6 @@ function uploadRecipeImage() {
 }
 
 async function addRecipeWithImage(imageUrl) {
-    showLoadingOverlay();
-
     const recipeName = document.getElementById('recipeName').value;
     const ingredients = document.getElementById('ingredients').value;
     const instructions = document.getElementById('instructions').value;
@@ -489,24 +383,18 @@ async function addRecipeWithImage(imageUrl) {
     try {
         await addDoc(collection(db, "Reseptit"), recipeData);
         console.log('Recipe added');
-        showAlert('Recipe added successfully!');
     } catch (error) {
         console.error("Error adding recipe:", error);
         throw error;
-    } finally {
-        hideLoadingOverlay();
     }
 }
-
-
-
-// This is the actual part where the form is submitted
 
 document.getElementById('addRecipeForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     try {
         const imageUrl = await uploadRecipeImage(); // Wait for the image to be uploaded
-        await addRecipeWithImage(imageUrl);
+        await addRecipeWithImage(imageUrl); // Wait for the recipe to be added
+        showAlert('Recipe submitted successfully!');
         document.getElementById('addRecipeForm').reset();
     } catch (error) {
         console.error("Error during submission:", error);
@@ -601,5 +489,19 @@ hideOptionsButton.addEventListener('click', () => {
         }
     } else {
         console.error("Elements do not exist");
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const logOutBtn = document.getElementById('logout-btn');
+    if (logOutBtn) {
+        logOutBtn.addEventListener('click', logOut);
+    }
+
+    const deleteButton = document.getElementById('deleteRecipeButton');
+    if (deleteButton) {
+        deleteButton.addEventListener('click', () => {
+            console.log('Delete button clicked');
+        });
     }
 });

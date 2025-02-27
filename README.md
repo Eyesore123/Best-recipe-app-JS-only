@@ -1,3 +1,5 @@
+NOTE! I am currently restructing the files in order to get rid of the error messages so the app might not work correctly at all times. Thank you for your patience!
+
 ## Features
 
 Store and create the recipes of your favorite foods and share them with others!
